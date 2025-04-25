@@ -1,0 +1,11 @@
+// filepath: /home/welli/Projects/book-api/requests/req.http
+@uri = http://localhost
+@port = 8080
+
+###GET HEALTH CHECK
+GET {{uri}}:{{port}}/api/v1/health 
+
+###GET ALL USERS
+GET {{uri}}:{{port}}/api/v1/book
+
+
