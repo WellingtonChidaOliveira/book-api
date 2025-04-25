@@ -1,16 +1,15 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/welligtonchida/book-api/internal/http/api"
+	"github.com/welligtonchida/book-api/internal/http/routes"
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Hello World",
-		})
-	})
+	h := routes.Handlers()
+	err := api.Start("8080", h)
+	if err != nil {
+		panic(err)
+	}
 
-	router.Run()
 }
