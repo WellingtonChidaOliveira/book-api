@@ -9,3 +9,11 @@ type Book struct {
 	Year        int    `json:"year" gorm:"type:int;not null"`
 	Description string `json:"description" gorm:"type:text;not null"`
 }
+
+type BookRepository interface {
+	CreateBook(book *Book) error
+	GetBookByID(id uint) (*Book, error)
+	GetAllBooks() ([]Book, error)
+	UpdateBook(book *Book) error
+	DeleteBook(id uint) error
+}

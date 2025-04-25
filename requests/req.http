@@ -6,6 +6,6 @@
 GET {{uri}}:{{port}}/api/v1/health 
 
 ###GET ALL USERS
-GET {{uri}}:{{port}}/api/v1/book
+GET {{uri}}:{{port}}/api/v1/books
 
 
