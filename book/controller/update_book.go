@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/welligtonchida/book-api/models"
-	"github.com/welligtonchida/book-api/services"
+	"github.com/welligtonchida/book-api/book/models"
+	"github.com/welligtonchida/book-api/repository"
 )
 
-func UpdateBook(s *services.BookRepository) gin.HandlerFunc {
+func UpdateBook(s *repository.PostgresBookRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		//id := c.Param("id")
 		var book models.Book
@@ -17,7 +17,7 @@ func UpdateBook(s *services.BookRepository) gin.HandlerFunc {
 			return
 		}
 
-		err := s.UpdateBook(&book)
+		err := s.Update(book)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update book"})
 			return
