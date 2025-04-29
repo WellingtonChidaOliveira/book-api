@@ -9,7 +9,11 @@ import (
 func Handlers() *gin.Engine {
 	// Define your routes hera
 	r := gin.Default()
-	repo, err := repository.NewPostgresRepository()
+	d, err := repository.InitDatabase()
+	if err != nil {
+		panic(err)
+	}
+	repo, err := repository.NewPostgresRepository(d)
 	if err != nil {
 		panic(err)
 	}

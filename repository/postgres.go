@@ -20,13 +20,18 @@ type PostgresBookRepository struct {
 	db *gorm.DB
 }
 
-func NewPostgresRepository() (*PostgresBookRepository, error) {
-	db, err := gorm.Open(postgres.Open("host=localhost user=postgres password=postgres dbname=bookapi port=5432 sslmode=disable TimeZone=Asia/Shanghai"), &gorm.Config{})
+func InitDatabase() (*gorm.DB, error) {
+	conn := "host=localhost user=postgres password=postgres dbname=bookapi port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+	db, err := gorm.Open(postgres.Open(conn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
 
-	err = db.AutoMigrate(&models.Book{})
+	return db, nil
+}
+
+func NewPostgresRepository(db *gorm.DB) (*PostgresBookRepository, error) {
+	err := db.AutoMigrate(&models.Book{})
 	if err != nil {
 		return nil, err
 	}
@@ -56,9 +61,17 @@ func (r *PostgresBookRepository) GetAll() ([]models.Book, error) {
 }
 
 func (r *PostgresBookRepository) Update(book models.Book) error {
+	_, err := r.GetByID(book.ID)
+	if err != nil {
+		return errors.New("book not found")
+	}
 	return r.db.Save(&book).Error
 }
 
 func (r *PostgresBookRepository) Delete(id uint) error {
+	_, err := r.GetByID(id)
+	if err != nil {
+		return errors.New("book not found")
+	}
 	return r.db.Delete(&models.Book{}, "id = ?", id).Error
 }

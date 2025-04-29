@@ -9,7 +9,7 @@ GET {{uri}}:{{port}}/api/v1/health
 GET {{uri}}:{{port}}/api/v1/books
 
 ###GET A BOOK BY ID
-GET {{uri}}:{{port}}/api/v1/books/2
+GET {{uri}}:{{port}}/api/v1/books/3
 
 
 ###Create A NEW BOOK
@@ -17,9 +17,12 @@ POST {{uri}}:{{port}}/api/v1/books
 Content-Type: application/json
 
 {
-    "id" :2,
-    "title": "The Lord of the Rings",
-    "author": "J.R.R. Tolkien",
-    "year": 2000,
-    "description": "An epic fantasy novel"
+    "id" :3,
+    "title": "Minfulness",
+    "author": "Jon Kabat-Zinn",
+    "year": 1990,
+    "description": "A guide to mindfulness meditation"
     }
+
+###Delete A BOOK
+DELETE {{uri}}:{{port}}/api/v1/books/7
