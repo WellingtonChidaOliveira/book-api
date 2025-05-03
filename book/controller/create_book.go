@@ -9,7 +9,17 @@ import (
 	"github.com/welligtonchida/book-api/repository"
 )
 
-func CreateBook(r *repository.PostgresBookRepository) gin.HandlerFunc {
+type Bookhandler struct {
+	Repo repository.BookRepository
+}
+
+func NewBookHandler(repo repository.BookRepository) *Bookhandler {
+	return &Bookhandler{
+		Repo: repo,
+	}
+}
+
+func (h *Bookhandler) CreateBook() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var book models.Book
 		if err := c.ShouldBindJSON(&book); err != nil {
@@ -17,7 +27,7 @@ func CreateBook(r *repository.PostgresBookRepository) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 			return
 		}
-		if err := r.Create(book); err != nil {
+		if err := h.Repo.Create(book); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create book"})
 			return
 		}

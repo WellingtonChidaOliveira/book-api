@@ -5,10 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/welligtonchida/book-api/book/models"
-	"github.com/welligtonchida/book-api/repository"
 )
 
-func UpdateBook(s *repository.PostgresBookRepository) gin.HandlerFunc {
+func (h *Bookhandler) UpdateBook() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		//id := c.Param("id")
 		var book models.Book
@@ -17,7 +16,7 @@ func UpdateBook(s *repository.PostgresBookRepository) gin.HandlerFunc {
 			return
 		}
 
-		err := s.Update(book)
+		err := h.Repo.Update(book)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update book"})
 			return

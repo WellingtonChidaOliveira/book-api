@@ -17,15 +17,17 @@ func Handlers() *gin.Engine {
 	if err != nil {
 		panic(err)
 	}
+
+	bookHandler := controller.NewBookHandler(repo)
 	r.GET("/api/v1/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"status": "ok",
 		})
 	})
-	r.GET("api/v1/books", controller.GetAllBooks(repo))
-	r.GET("api/v1/books/:id", controller.GetBookByID(repo))
-	r.POST("api/v1/books", controller.CreateBook(repo))
-	r.DELETE("api/v1/books/:id", controller.DeleteBookByID(repo))
-	r.PUT("api/v1/books/:id", controller.UpdateBook(repo))
+	r.GET("api/v1/books", bookHandler.GetAllBooks())
+	r.GET("api/v1/books/:id", bookHandler.GetBookByID())
+	r.POST("api/v1/books", bookHandler.CreateBook())
+	r.DELETE("api/v1/books/:id", bookHandler.DeleteBookByID())
+	r.PUT("api/v1/books/:id", bookHandler.UpdateBook())
 	return r
 }

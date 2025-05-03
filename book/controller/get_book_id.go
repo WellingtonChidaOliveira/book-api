@@ -5,10 +5,9 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/welligtonchida/book-api/repository"
 )
 
-func GetBookByID(s *repository.PostgresBookRepository) gin.HandlerFunc {
+func (h *Bookhandler) GetBookByID() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 		if err != nil {
@@ -16,7 +15,7 @@ func GetBookByID(s *repository.PostgresBookRepository) gin.HandlerFunc {
 			return
 		}
 
-		book, err := s.GetByID(uint(id))
+		book, err := h.Repo.GetByID(uint(id))
 		if err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Book not found"})
 			return

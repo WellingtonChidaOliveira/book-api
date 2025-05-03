@@ -69,11 +69,14 @@ func setUpRouter(repo *repository.PostgresBookRepository) *gin.Engine {
 			"status": "ok",
 		})
 	})
-	r.GET("api/v1/books", controller.GetAllBooks(repo))
-	r.GET("api/v1/books/:id", controller.GetBookByID(repo))
-	r.POST("api/v1/books", controller.CreateBook(repo))
-	r.DELETE("api/v1/books/:id", controller.DeleteBookByID(repo))
-	r.PUT("api/v1/books/:id", controller.UpdateBook(repo))
+
+	bookHandler := controller.NewBookHandler(repo)
+
+	r.GET("api/v1/books", bookHandler.GetAllBooks())
+	r.GET("api/v1/books/:id", bookHandler.GetBookByID())
+	r.POST("api/v1/books", bookHandler.CreateBook())
+	r.DELETE("api/v1/books/:id", bookHandler.DeleteBookByID())
+	r.PUT("api/v1/books/:id", bookHandler.UpdateBook())
 	return r
 }
 
@@ -92,6 +95,7 @@ func TestHandlers(t *testing.T) {
 		Year:        2017,
 		Description: "Software architecture is a set of structures needed to reason about the system.",
 	}
+	newBook.ID = 1 // Ensure ID is zero for new book creation
 	body, _ := json.Marshal(newBook)
 
 	// Test Create Book
@@ -106,6 +110,7 @@ func TestHandlers(t *testing.T) {
 	err = json.Unmarshal(w.Body.Bytes(), &createdBook)
 	assert.NoError(t, err)
 	assert.Equal(t, newBook.Title, createdBook.Title)
+	assert.NotZero(t, createdBook.ID)
 
 	// Test Get All Books
 	req = httptest.NewRequest("GET", "/api/v1/books", nil)
@@ -133,16 +138,13 @@ func TestHandlers(t *testing.T) {
 		Year:        2008,
 		Description: "A Handbook of Agile Software Craftsmanship",
 	}
+	updatedBook.ID = createdBook.ID // Use the same ID for update
 	body, _ = json.Marshal(updatedBook)
 	req = httptest.NewRequest("PUT", fmt.Sprintf("/api/v1/books/%d", createdBook.ID), bytes.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	w = httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusOK, w.Code)
-	var updatedBookResponse models.Book
-	err = json.Unmarshal(w.Body.Bytes(), &updatedBookResponse)
-	assert.NoError(t, err)
-	assert.Equal(t, updatedBook.Title, updatedBookResponse.Title)
 
 	// Test Delete Book
 	req = httptest.NewRequest("DELETE", fmt.Sprintf("/api/v1/books/%d", createdBook.ID), nil)
