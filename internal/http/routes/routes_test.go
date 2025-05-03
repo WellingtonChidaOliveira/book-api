@@ -16,7 +16,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 	"github.com/welligtonchida/book-api/book/controller"
 	"github.com/welligtonchida/book-api/book/models"
-	"github.com/welligtonchida/book-api/repository"
+	br "github.com/welligtonchida/book-api/book/repository"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -62,7 +62,7 @@ func setUpDataBase(t *testing.T) (*gorm.DB, func()) {
 	}
 }
 
-func setUpRouter(repo *repository.PostgresBookRepository) *gin.Engine {
+func setUpRouter(repo br.BookRepository) *gin.Engine {
 	r := gin.Default()
 	r.GET("/api/v1/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -84,10 +84,9 @@ func TestHandlers(t *testing.T) {
 	db, teardown := setUpDataBase(t)
 	defer teardown()
 
-	repo, err := repository.NewPostgresRepository(db)
-	assert.NoError(t, err)
+	repo := br.NewBookRepository(db)
 
-	r := setUpRouter(repo)
+	r := setUpRouter(*repo)
 
 	newBook := models.Book{
 		Title:       "Clean Architecture",
@@ -107,7 +106,7 @@ func TestHandlers(t *testing.T) {
 	assert.Equal(t, http.StatusCreated, w.Code)
 
 	var createdBook models.Book
-	err = json.Unmarshal(w.Body.Bytes(), &createdBook)
+	err := json.Unmarshal(w.Body.Bytes(), &createdBook)
 	assert.NoError(t, err)
 	assert.Equal(t, newBook.Title, createdBook.Title)
 	assert.NotZero(t, createdBook.ID)

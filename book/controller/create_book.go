@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/welligtonchida/book-api/book/models"
-	"github.com/welligtonchida/book-api/repository"
+	"github.com/welligtonchida/book-api/book/repository"
 )
 
 type Bookhandler struct {

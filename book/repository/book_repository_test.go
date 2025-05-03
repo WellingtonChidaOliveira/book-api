@@ -65,10 +65,7 @@ func TestPostgresBookRepository(t *testing.T) {
 	db, teardown := setupTestPostgresDB(t)
 	defer teardown()
 
-	repo, err := NewPostgresRepository(db)
-	if err != nil {
-		t.Fatalf("failed to create repository: %s", err)
-	}
+	repo := NewBookRepository(db)
 
 	book := models.Book{
 		Title:       "The Go Programming Language",
@@ -80,7 +77,7 @@ func TestPostgresBookRepository(t *testing.T) {
 	book.ID = 1 // Reset ID to 1 to ensure a new record is created
 
 	// Test Create
-	err = repo.Create(book)
+	err := repo.Create(book)
 	assert.NoError(t, err)
 	assert.NotZero(t, book.ID)
 
@@ -119,10 +116,7 @@ func TestPostgresRespositoryErrors(t *testing.T) {
 	db, teardown := setupTestPostgresDB(t)
 	defer teardown()
 
-	repo, err := NewPostgresRepository(db)
-	if err != nil {
-		t.Fatalf("failed to create repository: %s", err)
-	}
+	repo := NewBookRepository(db)
 
 	book := models.Book{
 		Title:       "The Go Programming Language",
@@ -133,7 +127,7 @@ func TestPostgresRespositoryErrors(t *testing.T) {
 	book.ID = 1 // Reset ID to 1 to ensure a new record is created
 
 	// Test Create
-	err = repo.Create(book)
+	err := repo.Create(book)
 	assert.NoError(t, err)
 	assert.NotZero(t, book.ID)
 

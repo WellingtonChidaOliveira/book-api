@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/welligtonchida/book-api/book/controller"
+	br "github.com/welligtonchida/book-api/book/repository"
 	"github.com/welligtonchida/book-api/repository"
 )
 
@@ -13,12 +14,12 @@ func Handlers() *gin.Engine {
 	if err != nil {
 		panic(err)
 	}
-	repo, err := repository.NewPostgresRepository(d)
+	repo := br.NewBookRepository(d)
 	if err != nil {
 		panic(err)
 	}
 
-	bookHandler := controller.NewBookHandler(repo)
+	bookHandler := controller.NewBookHandler(*repo)
 	r.GET("/api/v1/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"status": "ok",
