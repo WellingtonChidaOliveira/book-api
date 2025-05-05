@@ -62,7 +62,7 @@ func setUpDataBase(t *testing.T) (*gorm.DB, func()) {
 	}
 }
 
-func setUpRouter(repo br.BookRepository) *gin.Engine {
+func setUpRouter(repo models.BookRepository) *gin.Engine {
 	r := gin.Default()
 	r.GET("/api/v1/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -86,7 +86,7 @@ func TestHandlers(t *testing.T) {
 
 	repo := br.NewBookRepository(db)
 
-	r := setUpRouter(*repo)
+	r := setUpRouter(repo)
 
 	newBook := models.Book{
 		Title:       "Clean Architecture",

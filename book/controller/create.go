@@ -6,14 +6,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/welligtonchida/book-api/book/models"
-	"github.com/welligtonchida/book-api/book/repository"
 )
 
 type Bookhandler struct {
-	Repo repository.BookRepository
+	Repo models.BookRepository
 }
 
-func NewBookHandler(repo repository.BookRepository) *Bookhandler {
+func NewBookHandler(repo models.BookRepository) *Bookhandler {
 	return &Bookhandler{
 		Repo: repo,
 	}

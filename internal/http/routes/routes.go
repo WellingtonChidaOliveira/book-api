@@ -4,13 +4,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/welligtonchida/book-api/book/controller"
 	br "github.com/welligtonchida/book-api/book/repository"
-	"github.com/welligtonchida/book-api/repository"
+	"github.com/welligtonchida/book-api/config"
 )
 
 func Handlers() *gin.Engine {
 	// Define your routes hera
 	r := gin.Default()
-	d, err := repository.InitDatabase()
+	d, err := config.InitDatabase()
 	if err != nil {
 		panic(err)
 	}
@@ -19,7 +19,7 @@ func Handlers() *gin.Engine {
 		panic(err)
 	}
 
-	bookHandler := controller.NewBookHandler(*repo)
+	bookHandler := controller.NewBookHandler(repo)
 	r.GET("/api/v1/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"status": "ok",
