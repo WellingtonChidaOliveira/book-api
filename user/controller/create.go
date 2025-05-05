@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/welligtonchida/book-api/internal/middleware/jwt"
 	"github.com/welligtonchida/book-api/user/models"
 )
@@ -27,6 +28,8 @@ func (h *UserHandler) CreateUser() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 			return
 		}
+
+		user.ID = uuid.New()
 
 		createdUser, err := h.UserRepository.Create(&user)
 		if err != nil {

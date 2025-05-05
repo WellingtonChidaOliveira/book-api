@@ -26,3 +26,15 @@ Content-Type: application/json
 
 ###Delete A BOOK
 DELETE {{uri}}:{{port}}/api/v1/books/7
+
+
+###Create user
+POST {{uri}}:{{port}}/api/v1/user/create
+Content-Type: application/json
+
+{
+    "username": "testuser",
+    "email": "test@test.com",
+    "password": "testpassword",
+    "role": "user"
+}

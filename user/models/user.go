@@ -3,8 +3,8 @@ package models
 import "github.com/google/uuid"
 
 type User struct {
-	ID       uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
-	Name     string    `json:"name" gorm:"type:varchar(100);not null"`
+	ID       uuid.UUID `json:"id,omitempty" gorm:"type:uuid;primaryKey"`
+	Name     string    `json:"username" gorm:"type:varchar(100);not null"`
 	Email    string    `json:"email" gorm:"type:varchar(100);unique;not null"`
 	Password string    `json:"password" gorm:"type:varchar(100);not null"`
 	Role     string    `json:"role" gorm:"type:varchar(50);not null"`
